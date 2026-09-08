@@ -15,3 +15,51 @@ $$("[data-record]").forEach(b=>b.onclick=()=>openD(rec[b.dataset.record]));
 $("#restricted").onclick=()=>openD(["RESTRICTED FILE / 000","ACCESS LOG / ANOMALY","この記録を開くことは、想定されていません。","閲覧者による自発的な探索行動を確認。\n好奇心反応：正常。\n\n何も見なかったことにして、退出してください。"]);
 $("#status-button").onclick=()=>openD(["SYSTEM LOG / CURRENT SESSION","OBSERVATION STATUS",entered?"観測は正常に進行しています。":"観測は開始されていません。",entered?"識別番号："+subject+"\n思考活動：検出済み\n解析結果：分類不能":"公開見学経路から施設内へお進みください。"]);
 $("#dialog-close").onclick=()=>dlg.close();dlg.onclick=e=>{let r=dlg.getBoundingClientRect();if(e.target===dlg&&(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom))dlg.close()};dlg.onclose=()=>{document.body.style.overflow="";focus?.focus()};
+const sampleWords = [
+  "思考",
+  "記憶",
+  "疑念",
+  "選択",
+  "観測",
+  "あなた"
+];
+
+let currentWord = 0;
+
+const sampleWord =
+  document.getElementById("sample-word");
+
+const sampleWordNumber =
+  document.getElementById("sample-word-number");
+
+function changeSampleWord() {
+  sampleWord.classList.add("changing");
+
+  setTimeout(() => {
+    currentWord =
+      (currentWord + 1) % sampleWords.length;
+
+    sampleWord.textContent =
+      sampleWords[currentWord];
+
+    sampleWordNumber.textContent =
+      "SAMPLE " +
+      String(currentWord + 1).padStart(2, "0") +
+      " / " +
+      String(sampleWords.length).padStart(2, "0");
+
+    if (sampleWords[currentWord] === "あなた") {
+      sampleWord.classList.add("subject-word");
+    } else {
+      sampleWord.classList.remove("subject-word");
+    }
+
+    sampleWord.classList.remove("changing");
+  }, 300);
+}
+
+setInterval(changeSampleWord, 2800);
+
+document
+  .getElementById("word-sample-core")
+  .addEventListener("click", changeSampleWord);
