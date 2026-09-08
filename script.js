@@ -93,3 +93,40 @@ document
       );
     });
   });
+  const kananSocialLinks = [
+  {
+    name: "X",
+    url: "https://x.com/12kanan23"
+  },
+  {
+    name: "Instagram",
+    url: "https://www.instagram.com/12kaxxn23/"
+  }
+];
+
+const dialogSocials =
+  document.getElementById("dialog-socials");
+
+document
+  .querySelector('[data-creator="kanan"]')
+  .addEventListener("click", () => {
+    dialogSocials.innerHTML = "";
+
+    kananSocialLinks.forEach(social => {
+      const link =
+        document.createElement("a");
+
+      link.href = social.url;
+      link.textContent = social.name + "　↗";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+
+      dialogSocials.appendChild(link);
+    });
+  });
+
+document
+  .getElementById("record-dialog")
+  .addEventListener("close", () => {
+    dialogSocials.innerHTML = "";
+  });

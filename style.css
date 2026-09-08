@@ -62,3 +62,26 @@
   color: #b91f2c;
   border-color: #b91f2c;
 }
+#dialog-socials {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+#dialog-socials:empty {
+  display: none;
+}
+
+#dialog-socials a {
+  padding: 10px 16px;
+  border: 1px solid #182020;
+  color: #182020;
+  font-family: monospace;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+#dialog-socials a:hover {
+  background: #182020;
+  color: #ffffff;
+}
