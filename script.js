@@ -1,132 +1,634 @@
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const n=String(Math.floor(Math.random()*900)+100),guest="GUEST-"+n,subject="MISST-"+n;
-let entered=false,q=0;
-const qs=[["誰も見ていなかった出来事は、<br>なかったことになると思いますか。","なると思う","ならないと思う"],["沈黙は、<br>同意だと思いますか。","同意である","同意ではない"],["脳がない方が、<br>幸せだと思いますか。","そう思う","そう思わない"]];
-$("#visitor-id").textContent="VISITOR / "+guest;$("#test-id").textContent=guest;$("#final-id").textContent=subject;
-function toast(t){let e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),2200)}
-$("#entry-button").onclick=()=>{entered=true;document.body.classList.add("observing");$("#observe-status").textContent="PASSIVE";$("#header-status").textContent="TOUR / ACTIVE";toast("PUBLIC TOUR STARTED");$(".sterile-corridor").scrollIntoView({behavior:"smooth"})};
-const observer=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;let s=+e.target.dataset.stage;$("#progress").style.width=s/9*100+"%";if(!entered||s<3)return;$("#observe-status").textContent=s>=9?"COMPLETE":"ACTIVE";$("#thought-state").textContent="DETECTED";$("#response-status").textContent="LOW ACTIVITY DETECTED";if(s>=6){$("#header-status").textContent="OBSERVATION / ACTIVE";$(".status-button").classList.add("alert")}if(s>=8)$("#visitor-id").textContent="SUBJECT / "+subject;if(s>=9)$("#header-status").textContent="SYSTEM / REVIEW"}),{threshold:.28});
-$$("[data-stage]").forEach(e=>observer.observe(e));
-function showQ(){let a=qs[q],bs=$$(".answers button");$("#question-number").textContent="QUESTION / "+String(q+1).padStart(2,"0");$("#question-text").innerHTML=a[0];bs[0].childNodes[0].textContent=a[1];bs[1].childNodes[0].textContent=a[2];$$(".question-dots i").forEach((e,i)=>e.classList.toggle("active",i===q))}
-$$("[data-answer]").forEach(b=>b.onclick=()=>{$("#question-panel").hidden=true;$("#recorded").hidden=false;$("#observe-status").textContent="RECORDING";if(q===0){$("#test-id").textContent=subject;$("#visitor-id").textContent="SUBJECT / "+subject;toast("IDENTIFICATION UPDATED")}setTimeout(()=>{if(++q<qs.length){$("#recorded").hidden=true;$("#question-panel").hidden=false;showQ()}else{$("#recorded").innerHTML='<span class="pulse"></span><p>思考反応を検出しました。</p><small class="mono">CLASSIFICATION / UNRESOLVED</small>';$("#observe-status").textContent="ANALYZING"}},850)});
-const rec={designer:["OBSERVATION RECORD / 001","2025 / CLOSED","名もなきデザイナーをさがして","参加者の多くに、自分の選択を疑う反応が確認されました。\n\n公演は終了しています。公演は終了してい。","designer.png"],silence:["OBSERVATION RECORD / 002","2026 / CLOSED","沈黙の学級会","教室内において、同調に関する複数の思考反応が確認されました。\n\n公演は終了しています。観測記録の一部のみを公開しています。","silence.png"]},dlg=$("#record-dialog");let focus;
-function openD(a){focus=document.activeElement;["#dialog-code","#dialog-label","#dialog-title","#dialog-copy"].forEach((s,i)=>$(s).textContent=a[i]);let im=$("#dialog-image");im.hidden=!a[4];if(a[4]){im.src=a[4];im.alt=a[2]+" 公演ビジュアル"}else{im.removeAttribute("src");im.alt=""}dlg.showModal();document.body.style.overflow="hidden"}
-$$("[data-record]").forEach(b=>b.onclick=()=>openD(rec[b.dataset.record]));
-$("#restricted").onclick=()=>openD(["RESTRICTED FILE / 000","ACCESS LOG / ANOMALY","この記録を開くことは、想定されていません。","閲覧者による自発的な探索行動を確認。\n好奇心反応：正常。\n\n何も見なかったことにして、退出してください。"]);
-$("#status-button").onclick=()=>openD(["SYSTEM LOG / CURRENT SESSION","OBSERVATION STATUS",entered?"観測は正常に進行しています。":"観測は開始されていません。",entered?"識別番号："+subject+"\n思考活動：検出済み\n解析結果：分類不能":"公開見学経路から施設内へお進みください。"]);
-$("#dialog-close").onclick=()=>dlg.close();dlg.onclick=e=>{let r=dlg.getBoundingClientRect();if(e.target===dlg&&(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom))dlg.close()};dlg.onclose=()=>{document.body.style.overflow="";focus?.focus()};
-const sampleWords = [
-  "思考",
-  "記憶",
-  "疑念",
-  "選択",
-  "観測",
-  "あなた"
-];
+(() => {
+  "use strict";
 
-let currentWord = 0;
+  function initialize() {
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) =>
+      Array.from(document.querySelectorAll(selector));
 
-const sampleWord =
-  document.getElementById("sample-word");
-
-const sampleWordNumber =
-  document.getElementById("sample-word-number");
-
-function changeSampleWord() {
-  sampleWord.classList.add("changing");
-
-  setTimeout(() => {
-    currentWord =
-      (currentWord + 1) % sampleWords.length;
-
-    sampleWord.textContent =
-      sampleWords[currentWord];
-
-    sampleWordNumber.textContent =
-      "SAMPLE " +
-      String(currentWord + 1).padStart(2, "0") +
-      " / " +
-      String(sampleWords.length).padStart(2, "0");
-
-    if (sampleWords[currentWord] === "あなた") {
-      sampleWord.classList.add("subject-word");
-    } else {
-      sampleWord.classList.remove("subject-word");
+    function setText(selector, value) {
+      const element = $(selector);
+      if (element) element.textContent = value;
     }
 
-    sampleWord.classList.remove("changing");
-  }, 300);
-}
+    function onClick(selector, handler) {
+      const element = $(selector);
+      if (element) element.addEventListener("click", handler);
+    }
 
-setInterval(changeSampleWord, 2800);
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
 
-document
-  .getElementById("word-sample-core")
-  .addEventListener("click", changeSampleWord);
-  const creatorProfiles = {
-　　　  kanan: [
-    "RESEARCHER FILE / 01",
-    "PROFILE / AUTHORIZED",
-    "嘉南",
-    "企画・体験設計・デザインを担当。\n\n没入体験の企画設計から、グラフィックや空間のデザインまで手がけています。",
-    "kanan.jpg"
-  ],
+    function scrollToSection(selector) {
+      const element = $(selector);
 
-  tsukko: [
-    "RESEARCHER FILE / 02",
-    "PROFILE / AUTHORIZED",
-    "つっこ",
-    "企画・シナリオ・小道具制作を担当。\n\n物語の構成やシナリオ制作、体験を形にする小道具制作を手がけています。",
-    "tsukko.jpg"
-  ]
-};
+      if (element) {
+        element.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start"
+        });
+      }
+    }
 
-document
-  .querySelectorAll("[data-creator]")
-  .forEach(button => {
-    button.addEventListener("click", () => {
-      const creatorName =
-        button.dataset.creator;
+    // ========================================
+    // 閲覧者の番号
+    // ========================================
 
-      openD(
-        creatorProfiles[creatorName]
+    const number = String(Math.floor(Math.random() * 900) + 100);
+    const guest = "GUEST-" + number;
+    const subject = "MISST-" + number;
+
+    let entered = false;
+
+    setText("#visitor-id", "VISITOR / " + guest);
+    setText("#test-id", guest);
+    setText("#final-id", subject);
+
+    // ========================================
+    // 画面下のお知らせ
+    // ========================================
+
+    let toastTimer;
+
+    function toast(message) {
+      const element = $("#toast");
+      if (!element) return;
+
+      element.textContent = message;
+      element.classList.add("show");
+
+      window.clearTimeout(toastTimer);
+
+      toastTimer = window.setTimeout(() => {
+        element.classList.remove("show");
+      }, 2200);
+    }
+
+    // ========================================
+    // 見学開始
+    // ========================================
+
+    onClick("#entry-button", () => {
+      entered = true;
+
+      document.body.classList.remove("before-entry");
+      document.body.classList.add("observing");
+
+      setText("#observe-status", "PASSIVE");
+      setText("#header-status", "TOUR / ACTIVE");
+
+      toast("PUBLIC TOUR STARTED");
+      scrollToSection(".sterile-corridor");
+    });
+
+    // ========================================
+    // スクロールに合わせて観測表示を変更
+    // ========================================
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+
+            const stage = Number(entry.target.dataset.stage);
+            if (!Number.isFinite(stage)) return;
+
+            const progress = $("#progress");
+
+            if (progress) {
+              progress.style.width =
+                Math.min(100, Math.max(0, (stage / 9) * 100)) + "%";
+            }
+
+            if (!entered || stage < 3) return;
+
+            setText(
+              "#observe-status",
+              stage >= 9 ? "COMPLETE" : "ACTIVE"
+            );
+
+            setText("#thought-state", "DETECTED");
+            setText("#response-status", "LOW ACTIVITY DETECTED");
+
+            if (stage >= 6) {
+              setText("#header-status", "OBSERVATION / ACTIVE");
+              $("#status-button")?.classList.add("alert");
+            }
+
+            if (stage >= 8) {
+              setText("#visitor-id", "SUBJECT / " + subject);
+            }
+
+            if (stage >= 9) {
+              setText("#header-status", "SYSTEM / REVIEW");
+            }
+          });
+        },
+        { threshold: 0.28 }
       );
+
+      $$("[data-stage]").forEach((element) => {
+        observer.observe(element);
+      });
+    }
+
+    // ========================================
+    // 公演の情報
+    // 文章・画像を変える場合はここを編集
+    // ========================================
+
+    const records = {
+      designer: {
+        code: "OBSERVATION RECORD / 001",
+        label: "2025 / CLOSED",
+        title: "名もなきデザイナーをさがして",
+        copy:
+          "参加者の多くに、自分の選択を疑う反応が確認されました。\n\n" +
+          "公演は終了しています。観測記録の一部のみを公開しています。",
+        image: "designer.png",
+        imageAlt: "名もなきデザイナーをさがして 公演ビジュアル"
+      },
+
+      silence: {
+        code: "OBSERVATION RECORD / 002",
+        label: "2026 / CLOSED",
+        title: "沈黙の学級会",
+        copy:
+          "教室内において、同調に関する複数の思考反応が確認されました。\n\n" +
+          "公演は終了しています。観測記録の一部のみを公開しています。",
+        image: "silence.png",
+        imageAlt: "沈黙の学級会 公演ビジュアル"
+      }
+    };
+
+    // ========================================
+    // 研究員のプロフィール
+    // 文章・画像・SNSを変える場合はここを編集
+    // ========================================
+
+    const creatorProfiles = {
+      kanan: {
+        code: "RESEARCHER FILE / 01",
+        label: "PROFILE / AUTHORIZED",
+        title: "嘉南",
+        copy:
+          "企画・体験設計・デザインを担当。\n\n" +
+          "没入体験の企画設計から、グラフィックや空間のデザインまで手がけています。",
+        image: "kanan.jpg",
+        imageAlt: "嘉南のプロフィール画像",
+        socials: [
+          {
+            name: "X",
+            url: "https://x.com/12kanan23"
+          },
+          {
+            name: "Instagram",
+            url: "https://www.instagram.com/12kaxxn23/"
+          }
+        ]
+      },
+
+      tsukko: {
+        code: "RESEARCHER FILE / 02",
+        label: "PROFILE / AUTHORIZED",
+        title: "つっこ",
+        copy:
+          "企画・シナリオ・小道具制作を担当。\n\n" +
+          "物語の構成やシナリオ制作、体験を形にする小道具制作を手がけています。",
+        image: "tsukko.jpg",
+        imageAlt: "つっこのプロフィール画像",
+        socials: []
+      }
+    };
+
+    // ========================================
+    // 共通ポップアップ
+    // ========================================
+
+    const dialog = $("#record-dialog");
+    let previousFocus = null;
+    let previousOverflow = "";
+
+    function getSocialContainer() {
+      if (!dialog) return null;
+
+      let container = dialog.querySelector("#dialog-socials");
+
+      // HTMLにSNS欄がなくても自動で追加
+      if (!container) {
+        container = document.createElement("div");
+        container.id = "dialog-socials";
+
+        const copy = dialog.querySelector("#dialog-copy");
+
+        if (copy) {
+          copy.insertAdjacentElement("afterend", container);
+        } else {
+          const content = dialog.querySelector(".dialog-content");
+          (content || dialog).appendChild(container);
+        }
+      }
+
+      container.style.display = "flex";
+      container.style.flexWrap = "wrap";
+      container.style.gap = "10px";
+      container.style.marginTop = "24px";
+
+      return container;
+    }
+
+    function openDialog(data) {
+      if (!data) return;
+
+      if (!dialog || typeof dialog.showModal !== "function") {
+        console.error(
+          'ポップアップを開けません。index.htmlの <dialog id="record-dialog"> を確認してください。'
+        );
+
+        toast("ポップアップのHTMLを確認してください。");
+        return;
+      }
+
+      setText("#dialog-code", data.code || "");
+      setText("#dialog-label", data.label || "");
+      setText("#dialog-title", data.title || "");
+      setText("#dialog-copy", data.copy || "");
+
+      const copy = $("#dialog-copy");
+
+      if (copy) {
+        copy.style.whiteSpace = "pre-line";
+      }
+
+      const image = $("#dialog-image");
+
+      if (image) {
+        image.hidden = !data.image;
+
+        if (data.image) {
+          image.src = data.image;
+          image.alt = data.imageAlt || data.title || "";
+        } else {
+          image.removeAttribute("src");
+          image.alt = "";
+        }
+      }
+
+      const socialContainer = getSocialContainer();
+
+      if (socialContainer) {
+        socialContainer.replaceChildren();
+
+        const socials = data.socials || [];
+        socialContainer.style.display = socials.length ? "flex" : "none";
+
+        socials.forEach((social) => {
+          const link = document.createElement("a");
+
+          link.href = social.url;
+          link.textContent = social.name + "　↗";
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+
+          link.style.padding = "10px 16px";
+          link.style.border = "1px solid currentColor";
+          link.style.fontSize = "12px";
+          link.style.textDecoration = "none";
+
+          socialContainer.appendChild(link);
+        });
+      }
+
+      if (!dialog.open) {
+        previousFocus = document.activeElement;
+        previousOverflow = document.body.style.overflow;
+
+        dialog.showModal();
+        document.body.style.overflow = "hidden";
+      }
+    }
+
+    // 公演ボタン
+    $$("[data-record]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        openDialog(records[button.dataset.record]);
+      });
     });
-  });
-  const kananSocialLinks = [
-  {
-    name: "X",
-    url: "https://x.com/12kanan23"
-  },
-  {
-    name: "Instagram",
-    url: "https://www.instagram.com/12kaxxn23/"
+
+    // 研究員ボタン
+    $$("[data-creator]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        openDialog(creatorProfiles[button.dataset.creator]);
+      });
+    });
+
+    // 非公開記録
+    onClick("#restricted", () => {
+      openDialog({
+        code: "RESTRICTED FILE / 000",
+        label: "ACCESS LOG / ANOMALY",
+        title: "この記録を開くことは、想定されていません。",
+        copy:
+          "閲覧者による自発的な探索行動を確認。\n" +
+          "好奇心反応：正常。\n\n" +
+          "何も見なかったことにして、退出してください。"
+      });
+    });
+
+    // ヘッダーの状態表示
+    onClick("#status-button", () => {
+      openDialog({
+        code: "SYSTEM LOG / CURRENT SESSION",
+        label: "OBSERVATION STATUS",
+        title: entered
+          ? "観測は正常に進行しています。"
+          : "観測は開始されていません。",
+        copy: entered
+          ? "識別番号：" + subject +
+            "\n思考活動：検出済み\n解析結果：分類不能"
+          : "公開見学経路から施設内へお進みください。"
+      });
+    });
+
+    // ポップアップを閉じる
+    if (dialog) {
+      onClick("#dialog-close", () => {
+        dialog.close();
+      });
+
+      dialog.addEventListener("click", (event) => {
+        if (event.target !== dialog) return;
+
+        const rect = dialog.getBoundingClientRect();
+
+        const outside =
+          event.clientX < rect.left ||
+          event.clientX > rect.right ||
+          event.clientY < rect.top ||
+          event.clientY > rect.bottom;
+
+        if (outside) dialog.close();
+      });
+
+      dialog.addEventListener("close", () => {
+        document.body.style.overflow = previousOverflow;
+
+        const socials = dialog.querySelector("#dialog-socials");
+
+        if (socials) {
+          socials.replaceChildren();
+          socials.style.display = "none";
+        }
+
+        if (previousFocus instanceof HTMLElement) {
+          previousFocus.focus();
+        }
+      });
+    }
+
+    // ========================================
+    // 標本カードの文字切り替え
+    // ========================================
+
+    const sampleWords = [
+      "思考",
+      "記憶",
+      "疑念",
+      "選択",
+      "観測",
+      "あなた"
+    ];
+
+    const sampleWord = $("#sample-word");
+    const sampleWordNumber = $("#sample-word-number");
+
+    // 過去のID表記にも対応
+    const sampleCore =
+      $("#word-sample-core") ||
+      $("#word-s-core") ||
+      sampleWord?.closest(".sample-core");
+
+    if (sampleWord && sampleCore) {
+      let currentWord = 0;
+      let changing = false;
+
+      function renderSampleWord() {
+        sampleWord.textContent = sampleWords[currentWord];
+
+        sampleWord.classList.toggle(
+          "subject-word",
+          sampleWords[currentWord] === "あなた"
+        );
+
+        if (sampleWordNumber) {
+          sampleWordNumber.textContent =
+            "SAMPLE " +
+            String(currentWord + 1).padStart(2, "0") +
+            " / " +
+            String(sampleWords.length).padStart(2, "0");
+        }
+      }
+
+      function changeSampleWord() {
+        if (changing) return;
+
+        changing = true;
+        sampleWord.classList.add("changing");
+
+        window.setTimeout(() => {
+          currentWord = (currentWord + 1) % sampleWords.length;
+
+          renderSampleWord();
+
+          sampleWord.classList.remove("changing");
+          changing = false;
+        }, reduceMotion ? 0 : 300);
+      }
+
+      renderSampleWord();
+
+      sampleCore.addEventListener("click", changeSampleWord);
+
+      window.setInterval(() => {
+        if (!document.hidden) changeSampleWord();
+      }, 2800);
+    }
+
+    // ========================================
+    // 思考反応試験
+    // 質問を変える場合はここを編集
+    // ========================================
+
+    const questions = [
+      {
+        text: "誰も見ていなかった出来事は、\nなかったことになると思いますか。",
+        answers: ["なると思う", "ならないと思う"]
+      },
+      {
+        text: "沈黙は、\n同意だと思いますか。",
+        answers: ["同意である", "同意ではない"]
+      },
+      {
+        text: "脳がない方が、\n幸せだと思いますか。",
+        answers: ["そう思う", "そう思わない"]
+      }
+    ];
+
+    const questionPanel = $("#question-panel");
+    const questionText = $("#question-text");
+    const recorded = $("#recorded");
+
+    const answerButtons = questionPanel
+      ? Array.from(questionPanel.querySelectorAll("[data-answer]"))
+      : [];
+
+    if (
+      questionPanel &&
+      questionText &&
+      recorded &&
+      answerButtons.length >= 2
+    ) {
+      let questionIndex = 0;
+      let processing = false;
+      let completed = false;
+
+      function showQuestion() {
+        const question = questions[questionIndex];
+
+        setText(
+          "#question-number",
+          "QUESTION / " + String(questionIndex + 1).padStart(2, "0")
+        );
+
+        questionText.textContent = question.text;
+        questionText.style.whiteSpace = "pre-line";
+
+        answerButtons.forEach((button, index) => {
+          button.replaceChildren(
+            document.createTextNode(question.answers[index] || "")
+          );
+
+          const numberLabel = document.createElement("span");
+
+          numberLabel.textContent = String(index + 1).padStart(2, "0");
+          button.appendChild(numberLabel);
+          button.disabled = false;
+        });
+
+        $$(".question-dots i").forEach((dot, index) => {
+          dot.classList.toggle("active", index === questionIndex);
+        });
+      }
+
+      function completeTest() {
+        completed = true;
+
+        setText("#observe-status", "ANALYZING");
+        setText("#result-response", "UNCLASSIFIED");
+        setText("#visitor-id", "SUBJECT / " + subject);
+
+        const pulse = document.createElement("span");
+        pulse.className = "pulse";
+
+        const message = document.createElement("p");
+        message.textContent = "思考反応を検出しました。";
+
+        const label = document.createElement("small");
+        label.className = "mono";
+        label.textContent = "CLASSIFICATION / UNRESOLVED";
+
+        recorded.replaceChildren(pulse, message, label);
+
+        const result = $("#result");
+
+        if (result) {
+          result.hidden = false;
+
+          const resultButton = document.createElement("button");
+
+          resultButton.type = "button";
+          resultButton.textContent = "観測結果を見る　→";
+
+          resultButton.style.display = "block";
+          resultButton.style.margin = "24px auto 0";
+          resultButton.style.padding = "12px 20px";
+          resultButton.style.border = "1px solid currentColor";
+          resultButton.style.background = "transparent";
+          resultButton.style.color = "inherit";
+          resultButton.style.font = "inherit";
+          resultButton.style.cursor = "pointer";
+
+          resultButton.addEventListener("click", () => {
+            setText("#observe-status", "COMPLETE");
+            setText("#header-status", "SYSTEM / REVIEW");
+
+            scrollToSection("#result");
+          });
+
+          recorded.appendChild(resultButton);
+        }
+      }
+
+      answerButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          if (processing || completed) return;
+
+          processing = true;
+          entered = true;
+
+          document.body.classList.remove("before-entry");
+          document.body.classList.add("observing");
+
+          answerButtons.forEach((answerButton) => {
+            answerButton.disabled = true;
+          });
+
+          questionPanel.hidden = true;
+          recorded.hidden = false;
+
+          setText("#observe-status", "RECORDING");
+
+          if (questionIndex === 0) {
+            setText("#test-id", subject);
+            setText("#visitor-id", "SUBJECT / " + subject);
+
+            toast("IDENTIFICATION UPDATED");
+          }
+
+          // 回答の内容は保存・送信しません
+          window.setTimeout(() => {
+            questionIndex += 1;
+
+            if (questionIndex < questions.length) {
+              recorded.hidden = true;
+              questionPanel.hidden = false;
+
+              showQuestion();
+              processing = false;
+            } else {
+              completeTest();
+              processing = false;
+            }
+          }, 850);
+        });
+      });
+
+      recorded.hidden = true;
+      questionPanel.hidden = false;
+      showQuestion();
+    }
   }
-];
 
-const dialogSocials =
-  document.getElementById("dialog-socials");
-
-document
-  .querySelector('[data-creator="kanan"]')
-  .addEventListener("click", () => {
-    dialogSocials.innerHTML = "";
-
-    kananSocialLinks.forEach(social => {
-      const link =
-        document.createElement("a");
-
-      link.href = social.url;
-      link.textContent = social.name + "　↗";
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-
-      dialogSocials.appendChild(link);
+  // HTMLの読み込みが終わってから動かす
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initialize, {
+      once: true
     });
-  });
-
-document
-  .getElementById("record-dialog")
-  .addEventListener("close", () => {
-    dialogSocials.innerHTML = "";
-  });
+  } else {
+    initialize();
+  }
+})();
