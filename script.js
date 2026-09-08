@@ -63,3 +63,33 @@ setInterval(changeSampleWord, 2800);
 document
   .getElementById("word-sample-core")
   .addEventListener("click", changeSampleWord);
+  const creatorProfiles = {
+nth  kanan: [
+    "RESEARCHER FILE / 01",
+    "PROFILE / AUTHORIZED",
+    "嘉南",
+    "企画・体験設計・デザインを担当。\n\n没入体験の企画設計から、グラフィックや空間のデザインまで手がけています。",
+    "kanan.jpg"
+  ],
+
+  tsukko: [
+    "RESEARCHER FILE / 02",
+    "PROFILE / AUTHORIZED",
+    "つっこ",
+    "企画・シナリオ・小道具制作を担当。\n\n物語の構成やシナリオ制作、体験を形にする小道具制作を手がけています。",
+    "tsukko.jpg"
+  ]
+};
+
+document
+  .querySelectorAll("[data-creator]")
+  .forEach(button => {
+    button.addEventListener("click", () => {
+      const creatorName =
+        button.dataset.creator;
+
+      openD(
+        creatorProfiles[creatorName]
+      );
+    });
+  });

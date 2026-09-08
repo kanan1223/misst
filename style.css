@@ -45,3 +45,20 @@
     font-size: 38px !important;
   }
 }
+.creator-open {
+ pencils width: 100%;
+  margin-top: 18px;
+  padding: 12px 0;
+  border: 0;
+  border-top: 1px solid #cad4d4;
+  background: transparent;
+  font-family: "Yu Mincho", serif;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.creator-open:hover {
+  color: #b91f2c;
+  border-color: #b91f2c;
+}
