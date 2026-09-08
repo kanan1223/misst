@@ -656,3 +656,46 @@
     initialize();
   }
 })();
+// ========================================
+// 実験終了の確認
+// ========================================
+
+(() => {
+  const exitButton = document.getElementById("exit-button");
+  const exitDialog = document.getElementById("exit-dialog");
+  const exitCancel = document.getElementById("exit-cancel");
+  const exitConfirm = document.getElementById("exit-confirm");
+
+  if (!exitButton || !exitDialog) return;
+
+  exitButton.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    if (!exitDialog.open) {
+      exitDialog.showModal();
+    }
+  });
+
+  exitCancel?.addEventListener("click", () => {
+    exitDialog.close();
+  });
+
+  exitConfirm?.addEventListener("click", () => {
+    exitDialog.classList.add("terminating");
+
+    exitConfirm.disabled = true;
+    exitConfirm.innerHTML =
+      "観測記録を破棄しています" +
+      "<small>TERMINATING SESSION...</small>";
+
+    window.setTimeout(() => {
+      history.replaceState(
+        null,
+        "",
+        location.pathname + location.search + "#entry"
+      );
+
+      window.location.reload();
+    }, 1400);
+  });
+})();
