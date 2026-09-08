@@ -169,39 +169,63 @@
     // ========================================
 
     const creatorProfiles = {
-      kanan: {
-        code: "RESEARCHER FILE / 01",
-        label: "PROFILE / AUTHORIZED",
-        title: "嘉南",
-        copy:
-          "企画・体験設計・デザインを担当。\n\n" +
-          "没入体験の企画設計から、グラフィックや空間のデザインまで手がけています。",
-        image: "kanan.jpg",
-        imageAlt: "嘉南のプロフィール画像",
-        socials: [
-          {
-            name: "X",
-            url: "https://x.com/12kanan23"
-          },
-          {
-            name: "Instagram",
-            url: "https://www.instagram.com/12kaxxn23/"
-          }
-        ]
-      },
+  kanan: {
+    code: "RESEARCHER FILE / 01",
+    label: "EXPERIENCE DESIGN / VISUAL CONTROL",
+    title: "嘉南",
+    copy:
+      "担当領域\n" +
+      "企画・体験設計・デザイン\n\n" +
 
-      tsukko: {
-        code: "RESEARCHER FILE / 02",
-        label: "PROFILE / AUTHORIZED",
-        title: "つっこ",
-        copy:
-          "企画・シナリオ・小道具制作を担当。\n\n" +
-          "物語の構成やシナリオ制作、体験を形にする小道具制作を手がけています。",
-        image: "tsukko.jpg",
-        imageAlt: "つっこのプロフィール画像",
-        socials: []
+      "参加者が物語をどのように見て、歩き、選択するのか。\n" +
+      "体験全体の流れや導線を設計し、グラフィック・空間・Webなどの視覚表現へ落とし込みます。\n\n" +
+
+      "主な観測業務\n" +
+      "・公演企画、コンセプト設計\n" +
+      "・没入体験の構成、参加者導線の設計\n" +
+      "・グラフィック、空間、Webデザイン\n" +
+      "・広報、作品世界のビジュアル管理\n\n" +
+
+      "OBSERVATION NOTE\n" +
+      "体験者の視線と行動を設計し、物語と現実の境界を曖昧にする。",
+    image: "kanan.jpg",
+    imageAlt: "嘉南のプロフィール画像",
+    socials: [
+      {
+        name: "X",
+        url: "https://x.com/12kanan23"
+      },
+      {
+        name: "Instagram",
+        url: "https://www.instagram.com/12kaxxn23/"
       }
-    };
+    ]
+  },
+
+  tsukko: {
+    code: "RESEARCHER FILE / 02",
+    label: "SCENARIO / MATERIAL PRODUCTION",
+    title: "つっこ",
+    copy:
+      "担当領域\n" +
+      "企画・脚本・小道具制作\n\n" +
+
+      "体験の中心となる物語を組み立て、登場人物の言葉や出来事を脚本として設計します。\n" +
+      "さらに、物語の中に存在する資料や道具を制作し、虚構の世界に手触りを与えます。\n\n" +
+
+      "主な観測業務\n" +
+      "・公演企画、物語構成\n" +
+      "・シナリオ、台詞、演出の制作\n" +
+      "・謎や物語に関わる小道具の制作\n" +
+      "・作品世界の設定、記録資料の制作\n\n" +
+
+      "OBSERVATION NOTE\n" +
+      "存在しない出来事に痕跡を与え、体験者の記憶に物語を残す。",
+    image: "tsukko.jpg",
+    imageAlt: "つっこのプロフィール画像",
+    socials: []
+  }
+};
 
     // ========================================
     // 共通ポップアップ
