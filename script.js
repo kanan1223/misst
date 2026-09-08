@@ -1,7 +1,7 @@
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const n=String(Math.floor(Math.random()*900)+100),guest="GUEST-"+n,subject="MISST-"+n;
 let entered=false,q=0;
-const qs=[["誰も見ていなかった出来事は、<br>なかったことになると思いますか。","なると思う","ならないと思う"],["自分の記憶と記録が違っていたら、<br>どちらを信じますか。","自分の記憶","残された記録"],["物語が終わったあとに残るものは、<br>体験の一部だと思いますか。","そう思う","そう思わない"]];
+const qs=[["誰も見ていなかった出来事は、<br>なかったことになると思いますか。","なると思う","ならないと思う"],["沈黙は、<br>同意だと思いますか。","同意である","同意ではない"],["脳がない方が、<br>幸せだと思いますか。","そう思う","そう思わない"]];
 $("#visitor-id").textContent="VISITOR / "+guest;$("#test-id").textContent=guest;$("#final-id").textContent=subject;
 function toast(t){let e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),2200)}
 $("#entry-button").onclick=()=>{entered=true;document.body.classList.add("observing");$("#observe-status").textContent="PASSIVE";$("#header-status").textContent="TOUR / ACTIVE";toast("PUBLIC TOUR STARTED");$(".sterile-corridor").scrollIntoView({behavior:"smooth"})};
@@ -9,7 +9,7 @@ const observer=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)
 $$("[data-stage]").forEach(e=>observer.observe(e));
 function showQ(){let a=qs[q],bs=$$(".answers button");$("#question-number").textContent="QUESTION / "+String(q+1).padStart(2,"0");$("#question-text").innerHTML=a[0];bs[0].childNodes[0].textContent=a[1];bs[1].childNodes[0].textContent=a[2];$$(".question-dots i").forEach((e,i)=>e.classList.toggle("active",i===q))}
 $$("[data-answer]").forEach(b=>b.onclick=()=>{$("#question-panel").hidden=true;$("#recorded").hidden=false;$("#observe-status").textContent="RECORDING";if(q===0){$("#test-id").textContent=subject;$("#visitor-id").textContent="SUBJECT / "+subject;toast("IDENTIFICATION UPDATED")}setTimeout(()=>{if(++q<qs.length){$("#recorded").hidden=true;$("#question-panel").hidden=false;showQ()}else{$("#recorded").innerHTML='<span class="pulse"></span><p>思考反応を検出しました。</p><small class="mono">CLASSIFICATION / UNRESOLVED</small>';$("#observe-status").textContent="ANALYZING"}},850)});
-const rec={designer:["OBSERVATION RECORD / 001","2025 / CLOSED","名もなきデザイナーをさがして","参加者の多くに、自分の選択を疑う反応が確認されました。\n\n公演は終了しています。残された問いは、現在も分類中です。","designer.png"],silence:["OBSERVATION RECORD / 002","2026 / CLOSED","沈黙の学級会","教室内において、沈黙、同調、疑念に関する複数の思考反応が確認されました。\n\n公演は終了しています。観測記録の一部のみを公開します。","silence.png"]},dlg=$("#record-dialog");let focus;
+const rec={designer:["OBSERVATION RECORD / 001","2025 / CLOSED","名もなきデザイナーをさがして","参加者の多くに、自分の選択を疑う反応が確認されました。\n\n公演は終了しています。公演は終了してい。","designer.png"],silence:["OBSERVATION RECORD / 002","2026 / CLOSED","沈黙の学級会","教室内において、同調に関する複数の思考反応が確認されました。\n\n公演は終了しています。観測記録の一部のみを公開しています。","silence.png"]},dlg=$("#record-dialog");let focus;
 function openD(a){focus=document.activeElement;["#dialog-code","#dialog-label","#dialog-title","#dialog-copy"].forEach((s,i)=>$(s).textContent=a[i]);let im=$("#dialog-image");im.hidden=!a[4];if(a[4]){im.src=a[4];im.alt=a[2]+" 公演ビジュアル"}else{im.removeAttribute("src");im.alt=""}dlg.showModal();document.body.style.overflow="hidden"}
 $$("[data-record]").forEach(b=>b.onclick=()=>openD(rec[b.dataset.record]));
 $("#restricted").onclick=()=>openD(["RESTRICTED FILE / 000","ACCESS LOG / ANOMALY","この記録を開くことは、想定されていません。","閲覧者による自発的な探索行動を確認。\n好奇心反応：正常。\n\n何も見なかったことにして、退出してください。"]);
