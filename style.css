@@ -85,3 +85,154 @@
   background: #182020;
   color: #ffffff;
 }
+/* ========================================
+   MISST公式情報
+======================================== */
+
+.misst-info {
+  background: #f6f9f9;
+  border-top: 1px solid #cbd5d5;
+  border-bottom: 1px solid #cbd5d5;
+}
+
+.misst-profile {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 48px;
+  align-items: center;
+  padding: 42px;
+  border: 1px solid #cbd5d5;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.misst-profile-logo {
+  display: grid;
+  place-items: center;
+  min-height: 150px;
+  padding: 25px;
+  border: 1px solid #cbd5d5;
+  background: #fff;
+}
+
+.misst-profile-logo img {
+  display: block;
+  width: 100%;
+  max-width: 130px;
+  height: auto;
+  object-fit: contain;
+}
+
+.misst-profile-copy > p:first-child {
+  margin: 0 0 14px;
+  color: #718080;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.misst-profile-copy h3 {
+  margin: 0 0 18px;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: clamp(30px, 4vw, 52px);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+
+.misst-profile-copy > p:last-child {
+  margin: 0;
+  color: #647070;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 14px;
+  line-height: 2;
+}
+
+.official-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 24px;
+  border-top: 1px solid #cbd5d5;
+  border-left: 1px solid #cbd5d5;
+}
+
+.official-links a {
+  position: relative;
+  display: flex;
+  min-height: 190px;
+  padding: 24px;
+  flex-direction: column;
+  color: #182020;
+  border-right: 1px solid #cbd5d5;
+  border-bottom: 1px solid #cbd5d5;
+  background: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition:
+    color 0.25s ease,
+    background 0.25s ease;
+}
+
+.official-links a > span {
+  color: #718080;
+  font-size: 9px;
+}
+
+.official-links a b {
+  margin-top: 35px;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.official-links a small {
+  margin-top: 8px;
+  color: #718080;
+  font-size: 11px;
+}
+
+.official-links a em {
+  margin-top: auto;
+  font-family: monospace;
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.08em;
+}
+
+.official-links a:hover {
+  color: #fff;
+  background: #182020;
+}
+
+.official-links a:hover span,
+.official-links a:hover small {
+  color: #bcc8c8;
+}
+
+.communication-note {
+  margin-top: 22px;
+  color: #718080;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+/* スマートフォン */
+@media (max-width: 700px) {
+  .misst-profile {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 24px;
+  }
+
+  .misst-profile-logo {
+    min-height: 120px;
+  }
+
+  .misst-profile-logo img {
+    max-width: 110px;
+  }
+
+  .official-links {
+    grid-template-columns: 1fr;
+  }
+
+  .official-links a {
+    min-height: 150px;
+  }
+}
