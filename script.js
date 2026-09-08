@@ -64,7 +64,7 @@ document
   .getElementById("word-sample-core")
   .addEventListener("click", changeSampleWord);
   const creatorProfiles = {
-nth  kanan: [
+　　　  kanan: [
     "RESEARCHER FILE / 01",
     "PROFILE / AUTHORIZED",
     "嘉南",
